@@ -1,0 +1,43 @@
+name: Deploy Packs DJ Web to Pages
+
+on:
+  # Se ejecuta cuando haces push a la rama 'main' (o 'master')
+  push:
+    branches: ["main"]
+
+  # Permite ejecutar el deploy manualmente desde la pestaña Actions
+  workflow_dispatch:
+
+# Permisos necesarios para escribir en GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Evita que se acumulen deploys si haces varios push seguidos
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Subir artefacto
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Sube todo el contenido del repositorio
+          path: '.'
+
+      - name: Deploy a GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
