@@ -1,13 +1,169 @@
-<style>
-    :root { --bg-dark: #0f0f0f; --card-bg: #1a1a1a; --accent: #00ff88; --text: #eeeeee; }
-    body { background-color: var(--bg-dark); color: var(--text); font-family: 'Inter', sans-serif; }
-    .dj-container { max-width: 1200px; margin: auto; padding: 20px; }
-    #djSearch { width: 100%; padding: 15px; margin-bottom: 30px; border-radius: 8px; border: 2px solid #333; background: var(--card-bg); color: white; }
-    .category-title { border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-top: 40px; color: var(--accent); }
-    .pack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; }
-    .pack-card { background: var(--card-bg); border-radius: 6px; padding: 15px; border: 1px solid #222; display: flex; flex-direction: column; transition: 0.3s; }
-    .pack-card:hover { border-color: var(--accent); background: #222; }
-    .pack-card h3 { font-size: 0.9em; margin: 0 0 10px 0; height: 40px; overflow: hidden; }
-    .dl-link { background: #333; color: var(--accent); padding: 8px; text-align: center; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 0.8em; }
-    .dl-link:hover { background: var(--accent); color: black; }
-</style>
+/* Importar una fuente más moderna y agresiva */
+@import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;400;700&display=swap');
+
+:root {
+    --bg-body: #050505;
+    --bg-card: rgba(255, 255, 255, 0.03);
+    --neon-green: #00ff88;
+    --neon-purple: #9d00ff;
+    --text-main: #ffffff;
+    --text-dim: #a0a0a0;
+    --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+body {
+    background-color: var(--bg-body);
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 255, 136, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(157, 0, 255, 0.05) 0%, transparent 20%);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    min-height: 100vh;
+}
+
+.dj-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* Header Estilo Título */
+h1 {
+    font-family: 'Syncopate', sans-serif;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    background: linear-gradient(to right, var(--neon-green), var(--neon-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 40px;
+}
+
+/* Buscador Estilo Cyberpunk */
+#djSearch {
+    width: 100%;
+    padding: 18px;
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    font-size: 1.1em;
+    backdrop-filter: blur(10px);
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+#djSearch:focus {
+    outline: none;
+    border-color: var(--neon-green);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Títulos de Categoría */
+.category-title {
+    font-family: 'Syncopate', sans-serif;
+    font-size: 1.2em;
+    margin: 50px 0 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.category-title::after {
+    content: "";
+    height: 1px;
+    flex-grow: 1;
+    background: linear-gradient(to right, var(--neon-green), transparent);
+    opacity: 0.3;
+}
+
+/* Grid de Packs */
+.pack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* Tarjetas Estilo Glassmorphism */
+.pack-card {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 25px;
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.pack-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.07);
+    border-color: var(--neon-green);
+    box-shadow: 0 10px 30px rgba(0, 255, 136, 0.1);
+}
+
+/* Decoración interna de la tarjeta */
+.pack-card::before {
+    content: "MP3/WAV";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 0.6em;
+    font-weight: bold;
+    color: var(--neon-green);
+    opacity: 0.5;
+}
+
+.pack-card h3 {
+    margin: 0 0 15px 0;
+    font-size: 1.1em;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.pack-card p {
+    font-size: 0.85em;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+}
+
+/* Botón de Descarga Animado */
+.dl-link {
+    margin-top: auto;
+    text-decoration: none;
+    color: #000;
+    background: var(--neon-green);
+    padding: 12px;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 255, 136, 0.3);
+}
+
+.dl-link:hover {
+    background: #fff;
+    box-shadow: 0 0 20px #fff;
+    transform: scale(1.02);
+}
+
+/* Animación para el buscador */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+::placeholder {
+    color: rgba(255,255,255,0.3);
+    font-size: 0.9em;
+}
