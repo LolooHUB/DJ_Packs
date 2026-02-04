@@ -1,169 +1,158 @@
-/* Importar una fuente más moderna y agresiva */
-@import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;400;700&display=swap');
+/* Importar fuentes pesadas y llamativas */
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat:wght@900&display=swap');
 
 :root {
-    --bg-body: #050505;
-    --bg-card: rgba(255, 255, 255, 0.03);
-    --neon-green: #00ff88;
-    --neon-purple: #9d00ff;
-    --text-main: #ffffff;
-    --text-dim: #a0a0a0;
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --color1: #ff00ea; /* Magenta Neon */
+    --color2: #00e5ff; /* Cyan */
+    --color3: #ffff00; /* Amarillo */
+    --color4: #00ff00; /* Verde Lima */
+    --bg-black: #080808;
 }
 
 body {
-    background-color: var(--bg-body);
-    background-image: 
-        radial-gradient(circle at 10% 20%, rgba(0, 255, 136, 0.05) 0%, transparent 20%),
-        radial-gradient(circle at 90% 80%, rgba(157, 0, 255, 0.05) 0%, transparent 20%);
-    color: var(--text-main);
-    font-family: 'Inter', sans-serif;
-    line-height: 1.6;
+    background-color: var(--bg-black);
+    color: white;
+    font-family: 'Montserrat', sans-serif;
     margin: 0;
-    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Fondo con movimiento de colores */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(45deg, #ff00ea22, #00e5ff22, #00ff0022);
+    z-index: -1;
+    filter: blur(80px);
 }
 
 .dj-container {
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 20px;
+    margin: auto;
+    padding: 20px;
 }
 
-/* Header Estilo Título */
+/* Título estilo Cartel de Festival */
 h1 {
-    font-family: 'Syncopate', sans-serif;
+    font-family: 'Bangers', cursive;
+    font-size: 4rem;
     text-align: center;
-    text-transform: uppercase;
+    color: white;
+    text-shadow: 4px 4px 0px var(--color1), -4px -4px 0px var(--color2);
     letter-spacing: 5px;
-    background: linear-gradient(to right, var(--neon-green), var(--neon-purple));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 40px;
+    margin: 40px 0;
+    transform: rotate(-2deg);
 }
 
-/* Buscador Estilo Cyberpunk */
+/* Buscador que cambia de color al escribir */
 #djSearch {
     width: 100%;
-    padding: 18px;
-    border: 1px solid var(--glass-border);
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    color: white;
-    font-size: 1.1em;
-    backdrop-filter: blur(10px);
-    box-sizing: border-box;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    padding: 20px;
+    border: 5px solid var(--color2);
+    background: #000;
+    color: var(--color3);
+    font-size: 1.5rem;
+    font-weight: 900;
+    border-radius: 0px; /* Estilo retro-brutalista */
+    box-shadow: 10px 10px 0px var(--color1);
+    outline: none;
+    transition: 0.2s;
 }
 
 #djSearch:focus {
-    outline: none;
-    border-color: var(--neon-green);
-    box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
-    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 15px 15px 0px var(--color4);
+    transform: translate(-5px, -5px);
 }
 
-/* Títulos de Categoría */
+/* Títulos de categorías súper coloridos */
 .category-title {
-    font-family: 'Syncopate', sans-serif;
-    font-size: 1.2em;
-    margin: 50px 0 25px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.category-title::after {
-    content: "";
-    height: 1px;
-    flex-grow: 1;
-    background: linear-gradient(to right, var(--neon-green), transparent);
-    opacity: 0.3;
+    background: var(--color3);
+    color: black;
+    display: inline-block;
+    padding: 5px 20px;
+    font-size: 2rem;
+    text-transform: uppercase;
+    margin-top: 50px;
+    transform: skewX(-10deg);
 }
 
 /* Grid de Packs */
 .pack-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+    gap: 25px;
+    margin-top: 30px;
 }
 
-/* Tarjetas Estilo Glassmorphism */
+/* Tarjetas con bordes de colores locos */
 .pack-card {
-    background: var(--bg-card);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    padding: 25px;
-    backdrop-filter: blur(5px);
+    background: #111;
+    border: 4px solid white;
+    padding: 20px;
+    position: relative;
+    transition: 0.3s;
     display: flex;
     flex-direction: column;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    position: relative;
-    overflow: hidden;
 }
+
+/* Bordes aleatorios para cada tarjeta (vía CSS) */
+.pack-card:nth-child(4n+1) { border-color: var(--color1); }
+.pack-card:nth-child(4n+2) { border-color: var(--color2); }
+.pack-card:nth-child(4n+3) { border-color: var(--color3); }
+.pack-card:nth-child(4n+4) { border-color: var(--color4); }
 
 .pack-card:hover {
-    transform: translateY(-10px);
-    background: rgba(255, 255, 255, 0.07);
-    border-color: var(--neon-green);
-    box-shadow: 0 10px 30px rgba(0, 255, 136, 0.1);
+    transform: scale(1.05) rotate(2deg);
+    z-index: 10;
+    background: white;
 }
 
-/* Decoración interna de la tarjeta */
-.pack-card::before {
-    content: "MP3/WAV";
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 0.6em;
-    font-weight: bold;
-    color: var(--neon-green);
-    opacity: 0.5;
+.pack-card:hover h3, .pack-card:hover p {
+    color: black;
 }
 
 .pack-card h3 {
-    margin: 0 0 15px 0;
-    font-size: 1.1em;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+    font-size: 1.4rem;
+    margin: 0;
+    color: white;
 }
 
 .pack-card p {
-    font-size: 0.85em;
-    color: var(--text-dim);
-    margin-bottom: 20px;
+    color: #ccc;
+    font-size: 0.9rem;
+    margin: 10px 0;
 }
 
-/* Botón de Descarga Animado */
+/* Botón de descarga estilo botón de Arcade */
 .dl-link {
-    margin-top: auto;
-    text-decoration: none;
-    color: #000;
-    background: var(--neon-green);
-    padding: 12px;
+    display: block;
+    margin-top: 15px;
+    background: white;
+    color: black;
     text-align: center;
-    border-radius: 8px;
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 0.8em;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 255, 136, 0.3);
+    padding: 10px;
+    text-decoration: none;
+    font-weight: 900;
+    border: 3px solid black;
+    box-shadow: 4px 4px 0px #888;
+    transition: 0.1s;
 }
 
-.dl-link:hover {
-    background: #fff;
-    box-shadow: 0 0 20px #fff;
-    transform: scale(1.02);
+.dl-link:active {
+    box-shadow: 0px 0px 0px;
+    transform: translate(4px, 4px);
 }
 
-/* Animación para el buscador */
-@keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.7; }
-    100% { opacity: 1; }
+/* Animación de Rainbow para elementos especiales */
+.pack-card:hover .dl-link {
+    background: linear-gradient(90deg, #ff0000, #ffea00, #00ff1a, #004dff, #ff00ea);
+    background-size: 400%;
+    animation: rainbow 5s linear infinite;
+    color: white;
 }
 
-::placeholder {
-    color: rgba(255,255,255,0.3);
-    font-size: 0.9em;
+@keyframes rainbow {
+    0% { background-position: 0%; }
+    100% { background-position: 100%; }
 }
