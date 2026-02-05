@@ -3,280 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pack DJ 100k - Ultimate Dashboard</title>
+    <title>Pack DJ 100k - Real Time</title>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat:wght@700;900&display=swap');
-
-        :root {
-            --color1: #ff00ea; --color2: #00e5ff; --color3: #ffff00; --color4: #00ff00; --bg-black: #050505;
-        }
-
-        body {
-            background-color: var(--bg-black); color: white; font-family: 'Montserrat', sans-serif;
-            margin: 0; padding: 0; overflow-x: hidden; min-height: 100vh;
-        }
-
-        /* FONDO DE LUCES ANIMADAS (SUTILES) */
-        .ambient-light {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            overflow: hidden; background: radial-gradient(circle at 50% 50%, #111, #000);
-        }
-
-        .light-orb {
-            position: absolute; width: 600px; height: 600px; border-radius: 50%;
-            filter: blur(120px); opacity: 0.15; animation: move 20s infinite alternate;
-        }
+        :root { --color1: #ff00ea; --color2: #00e5ff; --color3: #ffff00; --color4: #00ff00; --bg-black: #050505; }
+        body { background-color: var(--bg-black); color: white; font-family: 'Montserrat', sans-serif; margin: 0; overflow-x: hidden; }
+        .ambient-light { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.15; pointer-events: none; }
+        .orb { position: absolute; width: 600px; height: 600px; border-radius: 50%; filter: blur(120px); animation: move 20s infinite alternate; }
         .orb1 { background: var(--color1); top: -10%; left: -10%; }
-        .orb2 { background: var(--color2); bottom: -10%; right: -10%; animation-duration: 25s; }
-        .orb3 { background: var(--color4); top: 40%; left: 30%; animation-duration: 30s; opacity: 0.1; }
-
-        @keyframes move {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(100px, 50px) scale(1.2); }
-        }
-
-        .dj-container { max-width: 1200px; margin: auto; padding: 20px; position: relative; z-index: 2; }
-
-        /* WIDGETS LATERALES */
-        .stats-sidebar {
-            position: fixed; right: 20px; top: 20%; background: rgba(0,0,0,0.8);
-            border: 2px solid var(--color2); padding: 15px; border-radius: 10px; z-index: 100;
-            box-shadow: 0 0 15px var(--color2); text-align: center;
-        }
-        .stats-sidebar div { font-size: 0.7rem; font-weight: 900; margin-bottom: 5px; }
-        .stats-sidebar .count { color: var(--color4); font-size: 1.1rem; display: block; }
-
-        #bpm-tap-tool {
-            position: fixed; right: 20px; bottom: 20px; background: rgba(0,0,0,0.9);
-            border: 2px solid var(--color4); padding: 15px; border-radius: 10px; z-index: 1000;
-            text-align: center; width: 80px;
-        }
-
-        /* HEADER Y BUSCADOR */
-        h1 {
-            font-family: 'Bangers', cursive; font-size: clamp(3rem, 10vw, 5rem);
-            text-align: center; text-shadow: 5px 5px 0px var(--color1), -5px -5px 0px var(--color2);
-            letter-spacing: 5px; margin: 40px 0; transform: rotate(-2deg);
-        }
-
-        #djSearch {
-            width: 100%; padding: 20px; border: 5px solid var(--color2); background: #000;
-            color: var(--color3); font-size: 1.5rem; font-weight: 900;
-            box-shadow: 8px 8px 0px var(--color1); outline: none; box-sizing: border-box;
-            margin-bottom: 20px;
-        }
-
-        .toolbar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; justify-content: center; }
-        .tool-btn {
-            background: #111; border: 2px solid white; color: white; padding: 10px 15px;
-            cursor: pointer; font-weight: 900; text-transform: uppercase; transition: 0.2s;
-        }
-        .tool-btn.active, .tool-btn:hover { background: white; color: black; }
-
-        /* CARDS */
-        .category-title {
-            background: var(--color3); color: black; display: inline-block;
-            padding: 5px 20px; font-size: 1.5rem; text-transform: uppercase;
-            margin: 30px 0 15px 0; transform: skewX(-10deg);
-        }
-
+        .orb2 { background: var(--color2); bottom: -10%; right: -10%; }
+        @keyframes move { 0% { transform: translate(0,0); } 100% { transform: translate(100px, 50px); } }
+        .sidebar-stats { position: fixed; right: 20px; top: 20px; background: rgba(0,0,0,0.9); border: 2px solid var(--color2); padding: 15px; border-radius: 12px; z-index: 1000; box-shadow: 0 0 15px var(--color2); text-align: center; font-size: 0.8rem; }
+        .sidebar-stats b { color: var(--color4); font-size: 1.1rem; display: block; }
+        #bpm-tool { position: fixed; left: 20px; bottom: 20px; background: #000; border: 2px solid var(--color4); padding: 10px; border-radius: 8px; text-align: center; z-index: 1000; }
+        .dj-container { max-width: 1100px; margin: auto; padding: 20px; }
+        h1 { font-family: 'Bangers', cursive; font-size: clamp(3rem, 8vw, 5rem); text-align: center; text-shadow: 5px 5px var(--color1); margin: 30px 0; transform: rotate(-1deg); }
+        #djSearch { width: 100%; padding: 20px; background: #000; border: 4px solid var(--color2); color: var(--color3); font-size: 1.3rem; font-weight: 900; box-shadow: 8px 8px var(--color1); outline: none; margin-bottom: 30px; }
+        .toolbar { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 30px; }
+        .tool-btn { background: #111; border: 2px solid white; color: white; padding: 10px 15px; cursor: pointer; font-weight: 900; text-transform: uppercase; }
+        .tool-btn.active { background: white; color: black; }
         .pack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .pack-card {
-            background: rgba(15, 15, 15, 0.95); border: 3px solid white; padding: 20px;
-            transition: 0.3s; position: relative;
-        }
-        .pack-card:hover { transform: translateY(-5px); background: white; color: black; }
-
-        .fav-btn {
-            position: absolute; top: 10px; right: 10px; background: none; border: none;
-            color: gray; font-size: 1.4rem; cursor: pointer;
-        }
-        .fav-btn.active { color: var(--color1) !important; }
-
-        .dl-link {
-            display: block; background: black; color: white; text-align: center;
-            padding: 10px; text-decoration: none; font-weight: 900; margin-top: 10px;
-        }
+        .pack-card { background: rgba(20,20,20,0.95); border: 2px solid white; padding: 20px; transition: 0.3s; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
+        .pack-card:hover { transform: translateY(-5px); background: white; color: black; border-color: var(--color1); }
+        .dl-counter { font-size: 0.7rem; font-weight: 900; color: var(--color2); margin-bottom: 10px; display: block; }
+        .dl-link { display: block; background: black; color: white; text-align: center; padding: 12px; text-decoration: none; font-weight: 900; margin-top: 10px; }
         .pack-card:hover .dl-link { background: var(--color1); }
-
-        .downloaded-badge {
-            display: none; background: var(--color4); color: black; font-size: 0.6rem;
-            padding: 2px 5px; position: absolute; top: -10px; left: 10px; font-weight: 900;
-        }
-
-        /* NOTIFICACION SOCIAL */
-        #social-pop {
-            position: fixed; left: -400px; bottom: 30px; background: white; color: black;
-            padding: 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 900;
-            transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 2000;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-left: 6px solid var(--color1);
-        }
+        .fav-btn { position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 1.5rem; color: #333; cursor: pointer; }
+        .fav-btn.active { color: var(--color1) !important; }
     </style>
 </head>
 <body>
-
-<div class="ambient-light">
-    <div class="light-orb orb1"></div>
-    <div class="light-orb orb2"></div>
-    <div class="light-orb orb3"></div>
+<div class="ambient-light"><div class="orb orb1"></div><div class="orb orb2"></div></div>
+<div class="sidebar-stats">
+    <div>DJs ONLINE: <b id="live-users">0</b></div>
+    <div style="margin-top:10px;">DESC. TOTALES: <b id="global-total">0</b></div>
 </div>
-
-<div class="stats-sidebar">
-    <div>DJs ONLINE<span class="count" id="online-count">142</span></div>
-    <div style="margin-top:10px;">DESC. TOTALES<span class="count" id="total-dl-count">84,201</span></div>
+<div id="bpm-tool">
+    <div style="font-size: 0.6rem; color: var(--color4);">TAP BPM</div>
+    <div id="bpm-display" style="font-size: 1.2rem; font-weight: 900;">---</div>
+    <button onclick="tapBPM()" style="background:var(--color4); border:none; padding:5px; cursor:pointer; font-weight:900; width:100%;">TAP</button>
 </div>
-
-<div id="bpm-tap-tool">
-    <div style="font-size: 0.6rem; color: var(--color4); margin-bottom: 5px;">TAP BPM</div>
-    <div id="bpm-display" style="font-size: 1.5rem; font-weight: 900;">---</div>
-    <button onclick="tapBPM()" style="background: var(--color4); border:none; width:100%; cursor:pointer; font-weight:900; margin-top:5px;">TAP</button>
-</div>
-
-<div id="social-pop">🎧 <span id="pop-text">DJ descargando...</span></div>
-
 <div class="dj-container">
     <h1>PACK DJ 100K</h1>
-    
-    <input type="text" id="djSearch" placeholder="🔍 BUSCAR GÉNERO, ARTISTA, 'SOFTWARE', 'RETRO'...">
-
+    <input type="text" id="djSearch" placeholder="BUSCAR GENERO, PROGRAMA, TITULO...">
     <div class="toolbar">
         <button class="tool-btn active" onclick="filterBy('all', this)">Todos</button>
-        <button class="tool-btn" onclick="filterBy('favs', this)" style="color:var(--color1)">⭐ Favoritos</button>
-        <button class="tool-btn" onclick="filterBy('history', this)" style="color:var(--color2)">🕒 Mi Historial</button>
-        <button class="tool-btn" onclick="randomPack()" style="color:var(--color4)">🎲 Random</button>
+        <button class="tool-btn" onclick="filterBy('favs', this)">⭐ Favoritos</button>
+        <button class="tool-btn" onclick="filterBy('history', this)">🕒 Historial</button>
     </div>
-
-    <h2 class="category-title">🔥 Bateas y Herramientas</h2>
     <div class="pack-grid">
-        <div class="pack-card" data-tags="software programa pc mixxx controlador virtual dj" data-id="p1">
-            <span class="downloaded-badge">YA DESCARGADO</span>
-            <button class="fav-btn" onclick="toggleFav('p1', this)">★</button>
-            <div style="font-size:0.7rem; color:var(--color2)">EXE / TOOLS</div>
-            <h3>MIXXX DJ Software</h3>
-            <a class="dl-link" href="#" onclick="registerDownload('p1')">DESCARGAR</a>
+        <div class="pack-card" data-tags="diciembre 2024 cachengue" data-id="p_dic_24">
+            <button class="fav-btn" onclick="toggleFav('p_dic_24', this)">★</button>
+            <div><span class="dl-counter">DESCARGAS: <span id="count-p_dic_24">0</span></span><h3>Diciembre 2024</h3></div>
+            <a class="dl-link" href="#" onclick="trackDL('p_dic_24')" target="_blank">DESCARGAR</a>
         </div>
-
-        <div class="pack-card" data-tags="2024 fiesta diciembre cachengue" data-id="p2">
-            <span class="downloaded-badge">YA DESCARGADO</span>
-            <button class="fav-btn" onclick="toggleFav('p2', this)">★</button>
-            <div style="font-size:0.7rem; color:var(--color1)">HOT PACK</div>
-            <h3>Diciembre 2024</h3>
-            <a class="dl-link" href="#" onclick="registerDownload('p2')">DESCARGAR</a>
-        </div>
-
-        <div class="pack-card" data-tags="90s retro ochentas clasicos" data-id="p3">
-            <span class="downloaded-badge">YA DESCARGADO</span>
-            <button class="fav-btn" onclick="toggleFav('p3', this)">★</button>
-            <div style="font-size:0.7rem; color:var(--color3)">RETRO</div>
-            <h3>Mega Pack 90s V2</h3>
-            <a class="dl-link" href="#" onclick="registerDownload('p3')">DESCARGAR</a>
-        </div>
-        
-        <div class="pack-card" data-tags="fx efectos samples bocinas herramientas" data-id="p4">
-            <span class="downloaded-badge">YA DESCARGADO</span>
-            <button class="fav-btn" onclick="toggleFav('p4', this)">★</button>
-            <div style="font-size:0.7rem; color:var(--color4)">SAMPLES</div>
-            <h3>FX & Transitions</h3>
-            <a class="dl-link" href="#" onclick="registerDownload('p4')">DESCARGAR</a>
+        <div class="pack-card" data-tags="software programa pc mixxx" data-id="p_mixxx">
+            <button class="fav-btn" onclick="toggleFav('p_mixxx', this)">★</button>
+            <div><span class="dl-counter">DESCARGAS: <span id="count-p_mixxx">0</span></span><h3>MIXXX DJ Software</h3></div>
+            <a class="dl-link" href="https://mixxx.org/download/" onclick="trackDL('p_mixxx')" target="_blank">DESCARGAR</a>
         </div>
     </div>
 </div>
-
 <script>
-    // --- MEMORIA ---
-    let favorites = JSON.parse(localStorage.getItem('djFavs')) || [];
-    let history = JSON.parse(localStorage.getItem('djHistory')) || [];
+    // ESTO SERÁ REEMPLAZADO POR GITHUB ACTIONS
+    const firebaseConfig = __FIREBASE_CONFIG_PLACEHOLDER__;
 
-    // --- BUSCADOR PRO (Título + Tags) ---
-    document.getElementById('djSearch').addEventListener('keyup', function() {
-        let filter = this.value.toLowerCase();
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const onlineRef = db.ref('online_users');
+    const myPresence = onlineRef.push();
+    myPresence.set(true);
+    myPresence.onDisconnect().remove();
+    onlineRef.on('value', snap => document.getElementById('live-users').innerText = snap.numChildren());
+    function trackDL(id) {
+        db.ref('packs/' + id).transaction(v => (v || 0) + 1);
+        db.ref('global_downloads').transaction(v => (v || 0) + 1);
+        let history = JSON.parse(localStorage.getItem('djHistory')) || [];
+        if(!history.includes(id)) history.push(id);
+        localStorage.setItem('djHistory', JSON.stringify(history));
+    }
+    db.ref('packs').on('value', snap => {
+        const data = snap.val();
+        for(let id in data) {
+            const el = document.getElementById('count-' + id);
+            if(el) el.innerText = data[id].toLocaleString();
+        }
+    });
+    db.ref('global_downloads').on('value', snap => {
+        document.getElementById('global-total').innerText = (snap.val() || 0).toLocaleString();
+    });
+    let favs = JSON.parse(localStorage.getItem('djFavs')) || [];
+    function toggleFav(id, btn) {
+        if(favs.includes(id)) favs = favs.filter(f => f !== id);
+        else favs.push(id);
+        localStorage.setItem('djFavs', JSON.stringify(favs));
+        btn.classList.toggle('active');
+    }
+    function filterBy(type, btn) {
+        document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        let history = JSON.parse(localStorage.getItem('djHistory')) || [];
         document.querySelectorAll('.pack-card').forEach(card => {
-            let searchArea = card.innerText.toLowerCase() + " " + (card.getAttribute('data-tags') || "");
-            card.style.display = searchArea.includes(filter) ? "" : "none";
+            let id = card.getAttribute('data-id');
+            if(type === 'all') card.style.display = "";
+            else if(type === 'favs') card.style.display = favs.includes(id) ? "" : "none";
+            else if(type === 'history') card.style.display = history.includes(id) ? "" : "none";
+        });
+    }
+    document.getElementById('djSearch').addEventListener('keyup', function() {
+        let q = this.value.toLowerCase();
+        document.querySelectorAll('.pack-card').forEach(card => {
+            let tags = (card.getAttribute('data-tags') || "") + card.innerText.toLowerCase();
+            card.style.display = tags.includes(q) ? "" : "none";
         });
     });
-
-    // --- BPM TAP ---
     let taps = [];
     function tapBPM() {
-        const now = Date.now();
-        taps.push(now);
-        if (taps.length > 4) taps.shift();
-        if (taps.length > 1) {
+        const now = Date.now(); taps.push(now);
+        if(taps.length > 4) taps.shift();
+        if(taps.length > 1) {
             const avg = (taps[taps.length-1] - taps[0]) / (taps.length - 1);
             document.getElementById('bpm-display').innerText = Math.round(60000 / avg);
         }
     }
-
-    // --- FAVORITOS Y DESCARGAS ---
-    function toggleFav(id, btn) {
-        if (favorites.includes(id)) {
-            favorites = favorites.filter(f => f !== id);
-            btn.classList.remove('active');
-        } else {
-            favorites.push(id);
-            btn.classList.add('active');
-        }
-        localStorage.setItem('djFavs', JSON.stringify(favorites));
-    }
-
-    function registerDownload(id) {
-        if (!history.includes(id)) {
-            history.push(id);
-            localStorage.setItem('djHistory', JSON.stringify(history));
-            updateState();
-        }
-    }
-
-    function updateState() {
-        document.querySelectorAll('.pack-card').forEach(card => {
-            const id = card.getAttribute('data-id');
-            if (history.includes(id)) card.querySelector('.downloaded-badge').style.display = "block";
-            if (favorites.includes(id)) card.querySelector('.fav-btn').classList.add('active');
-        });
-    }
-
-    function filterBy(type, btn) {
-        document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('.pack-card').forEach(card => {
-            const id = card.getAttribute('data-id');
-            if (type === 'all') card.style.display = "";
-            else if (type === 'favs') card.style.display = favorites.includes(id) ? "" : "none";
-            else if (type === 'history') card.style.display = history.includes(id) ? "" : "none";
-        });
-    }
-
-    // --- NOTIFICACIONES FAKE ---
-    const users = ["DJ Kike", "Matias", "DJ Flow", "Christian", "Seba DJ", "La Joaqui Fan"];
-    const packs = ["Pack Diciembre", "MIXXX Software", "Retro Hits", "Efectos FX", "Batea VIP"];
-    
-    function socialPop() {
-        const user = users[Math.floor(Math.random()*users.length)];
-        const pack = packs[Math.floor(Math.random()*packs.length)];
-        document.getElementById('pop-text').innerHTML = `<b>${user}</b> descargó <b>${pack}</b>`;
-        const pop = document.getElementById('social-pop');
-        pop.style.left = "20px";
-        setTimeout(() => pop.style.left = "-400px", 4000);
-    }
-    setInterval(socialPop, 15000);
-
-    // --- STATS ---
-    setInterval(() => {
-        const count = Math.floor(Math.random() * (150 - 120) + 120);
-        document.getElementById('online-count').innerText = count;
-    }, 5000);
-
-    function randomPack() {
-        const visible = Array.from(document.querySelectorAll('.pack-card'));
-        const target = visible[Math.floor(Math.random()*visible.length)];
-        target.scrollIntoView({behavior: 'smooth', block: 'center'});
-        target.style.boxShadow = "0 0 30px var(--color4)";
-        setTimeout(() => target.style.boxShadow = "", 2000);
-    }
-
-    updateState();
 </script>
-
 </body>
 </html>
