@@ -1,43 +1,27 @@
-name: Deploy Packs DJ Web to Pages
+name: Deploy to GitHub Pages
 
 on:
-  # Se ejecuta cuando haces push a la rama 'main' (o 'master')
   push:
-    branches: ["main"]
+    branches:
+      - main  # Asegúrate de que tu rama se llame main
 
-  # Permite ejecutar el deploy manualmente desde la pestaña Actions
-  workflow_dispatch:
-
-# Permisos necesarios para escribir en GitHub Pages
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# Evita que se acumulen deploys si haces varios push seguidos
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  contents: write
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout del código
-        uses: actions/checkout@v4
+      - name: Checkout 
+        uses: actions/checkout@v3
 
-      - name: Configurar GitHub Pages
-        uses: actions/configure-pages@v4
-
-      - name: Subir artefacto
-        uses: actions/upload-pages-artifact@v3
-        with:
-          # Sube todo el contenido del repositorio
-          path: '.'
+      - name: Inyectar Secret de Firebase
+        run: |
+          # Reemplaza el marcador en el index.html por el contenido del Secret
+          sed -i "s/__FIREBASE_CONFIG_PLACEHOLDER__/${{ secrets.FIREBASE_CONFIG }}/g" index.html
 
       - name: Deploy a GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: . # Sube la carpeta raíz
+          branch: gh-pages # Se publicará en esta rama
