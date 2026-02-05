@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # Asegúrate de que tu rama se llame main
+      - main
 
 permissions:
   contents: write
@@ -16,12 +16,15 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Inyectar Secret de Firebase
+        env:
+          # Cargamos el Secret en una variable de entorno de la máquina virtual
+          FB_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
         run: |
-          # Reemplaza el marcador en el index.html por el contenido del Secret
-          sed -i "s/__FIREBASE_CONFIG_PLACEHOLDER__/${{ secrets.FIREBASE_CONFIG }}/g" index.html
+          # Usamos Node.js (que ya viene en GitHub Actions) para hacer el reemplazo de forma segura
+          node -e "const fs = require('fs'); const index = fs.readFileSync('index.html', 'utf8'); const config = process.env.FB_CONFIG; fs.writeFileSync('index.html', index.replace('__FIREBASE_CONFIG_PLACEHOLDER__', config));"
 
       - name: Deploy a GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: . # Sube la carpeta raíz
-          branch: gh-pages # Se publicará en esta rama
+          folder: .
+          branch: gh-pages
