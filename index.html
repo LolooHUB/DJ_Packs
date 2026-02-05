@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pack DJ 100k - Descarga Directa</title>
+    <title>Pack DJ 100k - Pro Dashboard</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat:wght@900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat:wght@700;900&display=swap');
 
         :root {
             --color1: #ff00ea; --color2: #00e5ff; --color3: #ffff00; --color4: #00ff00; --bg-black: #080808;
@@ -31,11 +31,25 @@
             letter-spacing: 5px; margin: 40px 0; transform: rotate(-2deg);
         }
 
+        /* BARRA DE HERRAMIENTAS */
+        .toolbar {
+            display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; justify-content: center;
+        }
+
+        .tool-btn {
+            background: #222; border: 2px solid white; color: white; padding: 10px 15px;
+            cursor: pointer; font-weight: 900; text-transform: uppercase; transition: 0.2s;
+        }
+
+        .tool-btn:hover, .tool-btn.active { background: white; color: black; transform: translateY(-3px); }
+        .btn-fav { border-color: var(--color1); color: var(--color1); }
+        .btn-random { border-color: var(--color4); color: var(--color4); }
+
         #djSearch {
             width: 100%; padding: 20px; border: 5px solid var(--color2); background: #000;
             color: var(--color3); font-size: 1.5rem; font-weight: 900;
             box-shadow: 10px 10px 0px var(--color1); outline: none; box-sizing: border-box;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
 
         .category-title {
@@ -44,11 +58,13 @@
             margin: 40px 0 20px 0; transform: skewX(-10deg);
         }
 
+        /* GRID Y CARDS */
         .pack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
 
         .pack-card {
             background: #111; border: 4px solid white; padding: 20px; transition: 0.3s;
             display: flex; flex-direction: column; justify-content: space-between;
+            position: relative;
         }
 
         .pack-card:nth-child(4n+1) { border-color: var(--color1); }
@@ -56,89 +72,159 @@
         .pack-card:nth-child(4n+3) { border-color: var(--color3); }
         .pack-card:nth-child(4n+4) { border-color: var(--color4); }
 
-        .pack-card:hover { transform: scale(1.05) rotate(1deg); z-index: 10; background: white; }
-        .pack-card:hover h3 { color: black; }
+        .pack-card:hover { transform: scale(1.05) rotate(1deg); z-index: 10; background: white; color: black; }
 
-        .pack-card h3 { font-size: 1.1rem; margin: 0 0 15px 0; text-transform: uppercase; line-height: 1.2; }
+        .card-meta { display: flex; justify-content: space-between; font-size: 0.7rem; margin-bottom: 10px; font-weight: 900; }
+        .dl-count { color: var(--color2); }
+        .pack-card:hover .dl-count { color: #555; }
+
+        .fav-btn {
+            position: absolute; top: 10px; right: 10px; background: none; border: none;
+            color: white; font-size: 1.5rem; cursor: pointer; transition: 0.2s;
+        }
+        .pack-card:hover .fav-btn { color: #000; }
+        .fav-btn.active { color: var(--color1) !important; text-shadow: 0 0 10px var(--color1); }
 
         .dl-link {
             display: block; background: black; color: white; text-align: center;
             padding: 12px; text-decoration: none; font-weight: 900; border: 2px solid black; transition: 0.2s;
+            margin-top: 10px;
         }
+        .pack-card:hover .dl-link { background: var(--color1); color: white; border-color: var(--color1); }
 
-        .pack-card:hover .dl-link { background: var(--color1); animation: pulse 1s infinite; color: white; }
-
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(0.95); } 100% { transform: scale(1); } }
+        /* SECCION FAVORITOS VACIA */
+        #fav-empty-msg { text-align: center; padding: 20px; display: none; color: #555; font-style: italic; }
     </style>
 </head>
 <body>
 
 <div class="dj-container">
     <h1>PACK DJ 100K</h1>
-    <input type="text" id="djSearch" placeholder="🔍 BUSCAR GÉNERO, VOLUMEN O PALABRA CLAVE...">
+    
+    <input type="text" id="djSearch" placeholder="🔍 BUSCAR GÉNERO, ARTISTA O TAGS...">
 
-    <h2 class="category-title">🚀 Imprescindibles y Bateas</h2>
-    <div class="pack-grid">
-        <div class="pack-card" data-tags="ayuda como bajar guia tutorial"><h3>Tutorial Descarga</h3><a class="dl-link" href="https://drive.google.com/drive/folders/1FFo7TRWIw71sPprtYaXLQwIumK24SLbE" target="_blank">ACCEDER</a></div>
-        <div class="pack-card" data-tags="exclusivo promo batea vip original"><h3>Originales Batea VIP</h3><a class="dl-link" href="https://drive.google.com/drive/folders/1xRSN4gtrMArerb7s_PfE0g_kncmXHv5q" target="_blank">ACCEDER</a></div>
-        <div class="pack-card" data-tags="fin de año fiesta 2024"><h3>Diciembre 2024</h3><a class="dl-link" href="https://drive.google.com/drive/folders/10AXmnXy_-ZDkhQHZ6DLccq4Gn828yuyD" target="_blank">ACCEDER</a></div>
-        <div class="pack-card" data-tags="primavera batea"><h3>Bateas Sep-Oct</h3><a class="dl-link" href="https://drive.google.com/drive/folders/1cEqB3Pq0RNh-TnYRaB5AOxbBEiBFMjE3" target="_blank">ACCEDER</a></div>
-        <div class="pack-card"><h3>Batea Agosto</h3><a class="dl-link" href="https://drive.google.com/drive/folders/1O-CLdzg-cd6lOcqLtjtfU8M3hGDepH5O" target="_blank">ACCEDER</a></div>
-        <div class="pack-card"><h3>Batea Julio P3</h3><a class="dl-link" href="https://drive.google.com/drive/folders/1XmucOIc2WCROvSPW4rt0HTigGEZaTqUC" target="_blank">ACCEDER</a></div>
-        <div class="pack-card"><h3>Batea Julio P2</h3><a class="dl-link" href="https://drive.google.com/drive/folders/1dHgC96kah5b8DmZArGbceFRG8UFfGQ2n" target="_blank">ACCEDER</a></div>
-        <div class="pack-card"><h3>Junio / Julio</h3><a class="dl-link" href="https://drive.google.com/drive/folders/1oVymvsFOnkm31wBSzU_fcnj2oj5acvEZ" target="_blank">ACCEDER</a></div>
-        <div class="pack-card" data-tags="raw clean wav mp3"><h3>Originales Vol 1</h3><a class="dl-link" href="https://drive.google.com/drive/folders/1w3yHwin0OSRhBuLdcs-DqBWDfEebsLOC" target="_blank">ACCEDER</a></div>
-        <div class="pack-card" data-tags="raw clean wav mp3"><h3>Originales Vol 2</h3><a class="dl-link" href="https://drive.google.com/drive/folders/1j9JV39cQmxxo5fxzm7BZ1UjgeFmiytf9" target="_blank">ACCEDER</a></div>
+    <div class="toolbar">
+        <button class="tool-btn active" onclick="filterByEpoch('all', this)">Todos</button>
+        <button class="tool-btn" onclick="filterByEpoch('80s', this)">80s</button>
+        <button class="tool-btn" onclick="filterByEpoch('90s', this)">90s</button>
+        <button class="tool-btn" onclick="filterByEpoch('2024', this)">2024</button>
+        <button class="tool-btn btn-fav" onclick="showFavorites(this)">⭐ Mis Favoritos</button>
+        <button class="tool-btn btn-random" onclick="randomPack()">🎲 Pack Aleatorio</button>
     </div>
 
-    <h2 class="category-title">🎧 Hits por Género</h2>
-    <div class="pack-grid">
-        <div class="pack-card" data-tags="tropical fiesta cuarteto"><h3>Cumbia Hits 12</h3><a class="dl-link" href="https://drive.google.com/drive/folders/1ri3FslBFMf5zGGGYQ503rmd7x3vVZEtX" target="_blank">DESCARGAR</a></div>
-        <div class="pack-card" data-tags="tropical fiesta cuarteto"><h3>Cumbia Hits 11</h3><a class="dl-link" href="https://drive.google.com/drive/folders/152AuGl3G-AiRFkhfd93JXp52AFff3a_j" target="_blank">DESCARGAR</a></div>
-        <div class="pack-card" data-tags="perreo urbano sandungueo"><h3>Reggaeton Hits 12</h3><a class="dl-link" href="https://drive.google.com/drive/folders/1L5ZZYzQA73EuRWj7eKb5vCzHGque_S5E" target="_blank">DESCARGAR</a></div>
-        <div class="pack-card" data-tags="perreo urbano sandungueo"><h3>Reggaeton Hits 11</h3><a class="dl-link" href="https://drive.google.com/drive/folders/1PHps_7AtgliCZm57G7D1MD1RymrUBo0V" target="_blank">DESCARGAR</a></div>
-        <div class="pack-card" data-tags="turreo argentina remix"><h3>RKT-Perreo 12</h3><a class="dl-link" href="https://drive.google.com/drive/folders/19jqOVsL3AY8vJJc0hfjc1yvWXhdBDVna" target="_blank">DESCARGAR</a></div>
-        <div class="pack-card" data-tags="turreo argentina remix"><h3>RKT-Perreo 11</h3><a class="dl-link" href="https://drive.google.com/drive/folders/1GqVjg2yC1oMuXtFk3_ROBa71O9KU1yj5" target="_blank">DESCARGAR</a></div>
-        <div class="pack-card" data-tags="house electronica dance"><h3>Tech House 11</h3><a class="dl-link" href="https://drive.google.com/drive/folders/1N7NE8Me9JHiDVjUruObefcMzmp3vnzBU" target="_blank">DESCARGAR</a></div>
-        <div class="pack-card" data-tags="mainstream radio top 40"><h3>Pop Music 13</h3><a class="dl-link" href="https://drive.google.com/drive/folders/1m5F0WXo4otF3dnexj4_xBdEDvq5-o_iu" target="_blank">DESCARGAR</a></div>
-        <div class="pack-card" data-tags="edit herramientas intro"><h3>Mashups 13</h3><a class="dl-link" href="https://drive.google.com/drive/folders/1vtnZDrmokTW_ZCUkwq-mpQC7_xsEuYk-" target="_blank">DESCARGAR</a></div>
-    </div>
+    <div id="fav-empty-msg">No has guardado favoritos todavía...</div>
 
-    <h2 class="category-title">🕰️ Retro & Classics</h2>
-    <div class="pack-grid">
-        <div class="pack-card" data-tags="viejitos clasicos noventas"><h3>Retro Hits 90s V2</h3><a class="dl-link" href="https://drive.google.com/drive/folders/1aZ2nQOvoVIBiR1aKwxoZVXrw0z1A_FAq" target="_blank">DESCARGAR</a></div>
-        <div class="pack-card" data-tags="viejitos clasicos ochentas"><h3>80s Love V3</h3><a class="dl-link" href="https://drive.google.com/drive/folders/1mqunjgy_AZMQmWn34Wz8rdrcNQmqkYPZ" target="_blank">DESCARGAR</a></div>
-        <div class="pack-card" data-tags="viejitos cachengue clasicos"><h3>Retro Cachengue</h3><a class="dl-link" href="https://drive.google.com/drive/folders/1j36QPu3_fiZlVtHEmN4w8Mab8OWbiWv_" target="_blank">DESCARGAR</a></div>
-    </div>
+    <div id="main-content">
+        <h2 class="category-title" id="cat-top">🔥 Top Descargas</h2>
+        <div class="pack-grid">
+            <div class="pack-card" data-tags="2024 fiesta diciembre" data-id="1">
+                <button class="fav-btn" onclick="toggleFav('1', this)">★</button>
+                <div class="card-meta"><span class="dl-count">🔥 12.4k DLs</span><span>MP3 / 320K</span></div>
+                <h3>Diciembre 2024</h3>
+                <a class="dl-link" href="#" target="_blank">DESCARGAR</a>
+            </div>
+            
+            <div class="pack-card" data-tags="90s retro eurodance" data-id="2">
+                <button class="fav-btn" onclick="toggleFav('2', this)">★</button>
+                <div class="card-meta"><span class="dl-count">🔥 8.1k DLs</span><span>WAV / LOSSLESS</span></div>
+                <h3>Retro Hits 90s</h3>
+                <a class="dl-link" href="#" target="_blank">DESCARGAR</a>
+            </div>
 
-    <h2 class="category-title">🛠️ Herramientas & Especiales</h2>
-    <div class="pack-grid">
-        <div class="pack-card" data-tags="fx efectos sonidos samples"><h3>Samples & FX V4</h3><a class="dl-link" href="https://drive.google.com/drive/folders/15qvvkFgLYiCSLbNrz9WU0vwKoZ0BqHvI" target="_blank">DESCARGAR</a></div>
-        <div class="pack-card" data-tags="rock nacional argentina fito"><h3>Fito Paez (640 trks)</h3><a class="dl-link" href="https://drive.google.com/drive/folders/1hyKCgKARLtjmZCl9DlaEbXQP7F9szbZn" target="_blank">DESCARGAR</a></div>
-        <div class="pack-card" data-tags="mixxx software programa pc controlador virtual dj virtualdj">
-            <h3>MIXXX DJ</h3>
-            <a class="dl-link" href="https://downloads.mixxx.org/releases/2.5.4/mixxx-2.5.4-win64.msi" target="_blank">DESCARGAR</a>
+            <div class="pack-card" data-tags="software programa pc mixxx" data-id="3">
+                <button class="fav-btn" onclick="toggleFav('3', this)">★</button>
+                <div class="card-meta"><span class="dl-count">🔥 5.2k DLs</span><span>APP / EXE</span></div>
+                <h3>MIXXX DJ Software</h3>
+                <a class="dl-link" href="#" target="_blank">DESCARGAR</a>
+            </div>
+
+            <div class="pack-card" data-tags="80s retro ochenta" data-id="4">
+                <button class="fav-btn" onclick="toggleFav('4', this)">★</button>
+                <div class="card-meta"><span class="dl-count">🔥 3.9k DLs</span><span>MP3 / 320K</span></div>
+                <h3>80s Love V3</h3>
+                <a class="dl-link" href="#" target="_blank">DESCARGAR</a>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
+    // --- LÓGICA DE BÚSQUEDA ---
     document.getElementById('djSearch').addEventListener('keyup', function() {
         let filter = this.value.toLowerCase();
-        // Buscamos todas las tarjetas
         document.querySelectorAll('.pack-card').forEach(card => {
-            // Texto visible (título)
-            let title = card.querySelector('h3').innerText.toLowerCase();
-            // Texto escondido (tags)
-            let tags = card.getAttribute('data-tags') ? card.getAttribute('data-tags').toLowerCase() : "";
-            
-            // Si el filtro coincide con el título O con las etiquetas
-            if (title.includes(filter) || tags.includes(filter)) {
+            let content = card.innerText.toLowerCase() + " " + card.getAttribute('data-tags').toLowerCase();
+            card.style.display = content.includes(filter) ? "" : "none";
+        });
+    });
+
+    // --- LÓGICA DE FAVORITOS (LocalStorage) ---
+    let favorites = JSON.parse(localStorage.getItem('djFavs')) || [];
+
+    function toggleFav(id, btn) {
+        if (favorites.includes(id)) {
+            favorites = favorites.filter(f => f !== id);
+            btn.classList.remove('active');
+        } else {
+            favorites.push(id);
+            btn.classList.add('active');
+        }
+        localStorage.setItem('djFavs', JSON.stringify(favorites));
+    }
+
+    function showFavorites(btn) {
+        const isShowing = btn.classList.toggle('active');
+        const cards = document.querySelectorAll('.pack-card');
+        let hasFavs = false;
+
+        cards.forEach(card => {
+            if (isShowing) {
+                if (favorites.includes(card.getAttribute('data-id'))) {
+                    card.style.display = "";
+                    hasFavs = true;
+                } else {
+                    card.style.display = "none";
+                }
+            } else {
+                card.style.display = "";
+            }
+        });
+
+        document.getElementById('fav-empty-msg').style.display = (isShowing && !hasFavs) ? "block" : "none";
+    }
+
+    // --- FILTROS DE ÉPOCA ---
+    function filterByEpoch(epoch, btn) {
+        document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        document.querySelectorAll('.pack-card').forEach(card => {
+            const tags = card.getAttribute('data-tags');
+            if (epoch === 'all' || tags.includes(epoch)) {
                 card.style.display = "";
             } else {
                 card.style.display = "none";
             }
         });
+    }
+
+    // --- BOTÓN ALEATORIO ---
+    function randomPack() {
+        const cards = document.querySelectorAll('.pack-card');
+        const randomIdx = Math.floor(Math.random() * cards.length);
+        const selectedCard = cards[randomIdx];
+        
+        alert("🎲 Te recomendamos: " + selectedCard.querySelector('h3').innerText);
+        selectedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        selectedCard.style.transform = "scale(1.1) rotate(5deg)";
+        setTimeout(() => selectedCard.style.transform = "", 1000);
+    }
+
+    // Cargar estado de favoritos al iniciar
+    document.querySelectorAll('.pack-card').forEach(card => {
+        if (favorites.includes(card.getAttribute('data-id'))) {
+            card.querySelector('.fav-btn').classList.add('active');
+        }
     });
 </script>
 
