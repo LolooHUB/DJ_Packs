@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pack DJ 100k - Real Time Dashboard</title>
+    <title>Pack DJ 100k - Dashboard Pro</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
@@ -11,186 +11,165 @@
         :root { --color1: #ff00ea; --color2: #00e5ff; --color3: #ffff00; --color4: #00ff00; --bg-black: #050505; }
         
         body { background-color: var(--bg-black); color: white; font-family: 'Montserrat', sans-serif; margin: 0; overflow-x: hidden; }
-
-        /* Estética DJ Pro */
-        .ambient-light { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.15; pointer-events: none; }
+        .ambient-light { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.1; pointer-events: none; }
         .orb { position: absolute; width: 600px; height: 600px; border-radius: 50%; filter: blur(120px); animation: move 20s infinite alternate; }
         .orb1 { background: var(--color1); top: -10%; left: -10%; }
         .orb2 { background: var(--color2); bottom: -10%; right: -10%; }
         @keyframes move { 0% { transform: translate(0,0); } 100% { transform: translate(100px, 50px); } }
 
-        .sidebar-stats { position: fixed; right: 20px; top: 20px; background: rgba(0,0,0,0.9); border: 2px solid var(--color2); padding: 15px; border-radius: 12px; z-index: 1000; text-align: center; font-size: 0.8rem; box-shadow: 0 0 15px var(--color2); }
-        .sidebar-stats b { color: var(--color4); font-size: 1.1rem; display: block; }
-
-        #bpm-tool { position: fixed; left: 20px; bottom: 20px; background: #000; border: 2px solid var(--color4); padding: 10px; border-radius: 8px; text-align: center; z-index: 1000; width: 70px; }
-        #bpm-display { font-size: 1.2rem; font-weight: 900; margin: 5px 0; color: var(--color4); }
+        .sidebar-stats { position: fixed; right: 20px; top: 20px; background: rgba(0,0,0,0.9); border: 2px solid var(--color2); padding: 12px; border-radius: 12px; z-index: 1000; text-align: center; font-size: 0.7rem; box-shadow: 0 0 15px var(--color2); }
+        .sidebar-stats b { color: var(--color4); font-size: 1rem; display: block; }
 
         #social-pop { position: fixed; left: -400px; bottom: 30px; background: white; color: black; padding: 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 900; transition: 0.6s; z-index: 2000; border-left: 6px solid var(--color1); box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
 
-        .dj-container { max-width: 1200px; margin: auto; padding: 20px; }
-        h1 { font-family: 'Bangers', cursive; font-size: clamp(3rem, 10vw, 5rem); text-align: center; text-shadow: 5px 5px var(--color1); margin: 40px 0; transform: rotate(-2deg); letter-spacing: 5px; }
+        .dj-container { max-width: 1300px; margin: auto; padding: 20px; }
+        h1 { font-family: 'Bangers', cursive; font-size: clamp(3rem, 10vw, 5.5rem); text-align: center; text-shadow: 6px 6px var(--color1); margin: 40px 0; transform: rotate(-1deg); }
         
-        #djSearch { width: 100%; padding: 25px; background: #000; border: 5px solid var(--color2); color: var(--color3); font-size: 1.5rem; font-weight: 900; box-shadow: 10px 10px var(--color1); outline: none; margin-bottom: 40px; box-sizing: border-box; }
+        #djSearch { width: 100%; padding: 25px; background: #000; border: 5px solid var(--color2); color: var(--color3); font-size: 1.5rem; font-weight: 900; box-shadow: 10px 10px var(--color1); outline: none; margin-bottom: 30px; box-sizing: border-box; }
 
-        .toolbar { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 30px; }
-        .tool-btn { background: #111; border: 2px solid white; color: white; padding: 12px 20px; cursor: pointer; font-weight: 900; text-transform: uppercase; transition: 0.2s; }
-        .tool-btn.active { background: white; color: black; border-color: var(--color1); }
+        .category-title { background: var(--color3); color: black; display: inline-block; padding: 5px 20px; font-size: 1.5rem; text-transform: uppercase; margin: 40px 0 15px 0; transform: skewX(-10deg); font-weight: 900; border: 2px solid black; }
+        .pack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+        
+        .pack-card { background: #111; border: 3px solid white; padding: 15px; transition: 0.2s; position: relative; display: flex; flex-direction: column; }
+        .pack-card:hover { transform: scale(1.03); background: white; color: black; border-color: var(--color1); }
+        
+        .dl-counter { font-size: 0.65rem; font-weight: 900; color: var(--color2); margin-bottom: 8px; }
+        .pack-card h3 { font-size: 0.95rem; margin: 0 0 15px 0; text-transform: uppercase; min-height: 40px; }
 
-        .category-title { background: var(--color3); color: black; display: inline-block; padding: 5px 20px; font-size: 1.8rem; text-transform: uppercase; margin: 40px 0 20px 0; transform: skewX(-10deg); border: 2px solid black; }
-        
-        .pack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
-        
-        .pack-card { background: #111; border: 4px solid white; padding: 20px; transition: 0.3s; position: relative; display: flex; flex-direction: column; justify-content: space-between; min-height: 180px; }
-        .pack-card:hover { transform: scale(1.05) rotate(1deg); z-index: 10; background: white; color: black; border-color: var(--color1); }
-        
-        .dl-counter { font-size: 0.7rem; font-weight: 900; color: var(--color2); display: block; margin-bottom: 10px; }
-        .pack-card:hover .dl-counter { color: #666; }
-        
-        .pack-card h3 { font-size: 1.1rem; margin: 0 0 15px 0; text-transform: uppercase; line-height: 1.2; }
+        .dl-link { display: block; background: black; color: white !important; text-align: center; padding: 10px; text-decoration: none; font-weight: 900; font-size: 0.8rem; margin-top: auto; }
+        .pack-card:hover .dl-link { background: var(--color1); }
 
-        .dl-link { display: block; background: black; color: white !important; text-align: center; padding: 12px; text-decoration: none; font-weight: 900; border: 2px solid black; margin-top: auto; }
-        .pack-card:hover .dl-link { background: var(--color1); border-color: var(--color1); }
-
-        .fav-btn { position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 1.5rem; color: #333; cursor: pointer; z-index: 5; }
-        .fav-btn.active { color: var(--color1) !important; text-shadow: 0 0 5px var(--color1); }
+        .fav-btn { position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 1.3rem; color: #333; cursor: pointer; }
+        .fav-btn.active { color: var(--color1) !important; }
     </style>
 </head>
 <body>
 
 <div class="ambient-light"><div class="orb orb1"></div><div class="orb orb2"></div></div>
-
-<div class="sidebar-stats">
-    <div>DJs ONLINE: <b id="live-users">0</b></div>
-    <div style="margin-top:10px;">DESC. TOTALES: <b id="global-total">0</b></div>
-</div>
-
-<div id="bpm-tool">
-    <div style="font-size: 0.5rem; color: var(--color4);">BPM TAP</div>
-    <div id="bpm-display">---</div>
-    <button onclick="tapBPM()" style="background:var(--color4); border:none; width:100%; cursor:pointer; font-weight:900; font-size:0.7rem; padding:5px 0;">TAP</button>
-</div>
-
+<div class="sidebar-stats">Online: <b id="live-users">0</b> Total DLs: <b id="global-total">0</b></div>
 <div id="social-pop">🎧 <span id="pop-text">DJ descargando...</span></div>
 
 <div class="dj-container">
     <h1>PACK DJ 100K</h1>
-    
-    <input type="text" id="djSearch" placeholder="🔍 BUSCAR GÉNERO, VOLUMEN O ARTISTA...">
+    <input type="text" id="djSearch" placeholder="🔍 BUSCAR: CUMBIA, 80s, SOFTWARE, BOLIVIA...">
 
-    <div class="toolbar">
-        <button class="tool-btn active" onclick="filterBy('all', this)">Todos</button>
-        <button class="tool-btn" onclick="filterBy('favs', this)" style="color:var(--color1)">⭐ Favoritos</button>
-        <button class="tool-btn" onclick="filterBy('history', this)" style="color:var(--color2)">🕒 Recientes</button>
-    </div>
-
-    <h2 class="category-title">🚀 Imprescindibles y Bateas</h2>
+    <h2 class="category-title">🚀 Imprescindibles y Bateas VIP</h2>
     <div class="pack-grid">
-        <div class="pack-card" data-tags="ayuda video como bajar drive" data-id="p_tutorial">
-            <button class="fav-btn" onclick="toggleFav('p_tutorial', this)">★</button>
-            <span class="dl-counter">DLs: <span id="count-p_tutorial">0</span></span>
+        <div class="pack-card" data-tags="ayuda tutorial como descargar drive video" data-id="tut_01">
+            <button class="fav-btn" onclick="toggleFav('tut_01', this)">★</button>
+            <span class="dl-counter">DLs: <span id="count-tut_01">0</span></span>
             <h3>Tutorial Descarga</h3>
-            <a class="dl-link" href="https://drive.google.com/drive/folders/1FFo7TRWIw71sPprtYaXLQwIumK24SLbE" onclick="trackDL('p_tutorial')" target="_blank">ACCEDER</a>
+            <a class="dl-link" href="https://drive.google.com/drive/folders/1FFo7TRWIw71sPprtYaXLQwIumK24SLbE" onclick="trackDL('tut_01')" target="_blank">ACCEDER</a>
         </div>
-        <div class="pack-card" data-tags="exclusivo vip batea originals" data-id="p_original_vip">
-            <button class="fav-btn" onclick="toggleFav('p_original_vip', this)">★</button>
-            <span class="dl-counter">DLs: <span id="count-p_original_vip">0</span></span>
+        <div class="pack-card" data-tags="vip batea originals premium" data-id="bat_vip">
+            <button class="fav-btn" onclick="toggleFav('bat_vip', this)">★</button>
+            <span class="dl-counter">DLs: <span id="count-bat_vip">0</span></span>
             <h3>Originales Batea VIP</h3>
-            <a class="dl-link" href="https://drive.google.com/drive/folders/1xRSN4gtrMArerb7s_PfE0g_kncmXHv5q" onclick="trackDL('p_original_vip')" target="_blank">ACCEDER</a>
+            <a class="dl-link" href="https://drive.google.com/drive/folders/1xRSN4gtrMArerb7s_PfE0g_kncmXHv5q" onclick="trackDL('bat_vip')" target="_blank">ACCEDER</a>
         </div>
-        <div class="pack-card" data-tags="fin de año fiesta 2024" data-id="p_dic_2024">
-            <button class="fav-btn" onclick="toggleFav('p_dic_2024', this)">★</button>
-            <span class="dl-counter">DLs: <span id="count-p_dic_2024">0</span></span>
-            <h3>Diciembre 2024</h3>
-            <a class="dl-link" href="https://drive.google.com/drive/folders/10AXmnXy_-ZDkhQHZ6DLccq4Gn828yuyD" onclick="trackDL('p_dic_2024')" target="_blank">ACCEDER</a>
-        </div>
-        <div class="pack-card" data-tags="bateas septiembre octubre" data-id="p_batea_sep_oct">
-            <button class="fav-btn" onclick="toggleFav('p_batea_sep_oct', this)">★</button>
-            <span class="dl-counter">DLs: <span id="count-p_batea_sep_oct">0</span></span>
-            <h3>Bateas Sep-Oct</h3>
-            <a class="dl-link" href="https://drive.google.com/drive/folders/1cEqB3Pq0RNh-TnYRaB5AOxbBEiBFMjE3" onclick="trackDL('p_batea_sep_oct')" target="_blank">ACCEDER</a>
+        <div class="pack-card" data-tags="2024 diciembre navidad año nuevo fiesta" data-id="mes_dic_24">
+            <button class="fav-btn" onclick="toggleFav('mes_dic_24', this)">★</button>
+            <span class="dl-counter">DLs: <span id="count-mes_dic_24">0</span></span>
+            <h3>DICIEMBRE 2024</h3>
+            <a class="dl-link" href="https://drive.google.com/drive/folders/10AXmnXy_-ZDkhQHZ6DLccq4Gn828yuyD" onclick="trackDL('mes_dic_24')" target="_blank">ACCEDER</a>
         </div>
     </div>
 
-    <h2 class="category-title">🎧 Hits por Género</h2>
+    <h2 class="category-title">🎧 Hits por Género (Volúmenes)</h2>
     <div class="pack-grid">
-        <div class="pack-card" data-tags="cumbia hits 12 fiesta" data-id="p_cumbia_12">
-            <button class="fav-btn" onclick="toggleFav('p_cumbia_12', this)">★</button>
-            <span class="dl-counter">DLs: <span id="count-p_cumbia_12">0</span></span>
-            <h3>Cumbia Hits 12</h3>
-            <a class="dl-link" href="https://drive.google.com/drive/folders/1ri3FslBFMf5zGGGYQ503rmd7x3vVZEtX" onclick="trackDL('p_cumbia_12')" target="_blank">DESCARGAR</a>
+        <div class="pack-card" data-tags="cumbia hits fiesta 12" data-id="cum_12">
+            <h3>Cumbia Hits Vol 12</h3>
+            <a class="dl-link" href="https://drive.google.com/drive/folders/1ri3FslBFMf5zGGGYQ503rmd7x3vVZEtX" onclick="trackDL('cum_12')" target="_blank">DESCARGAR</a>
         </div>
-        <div class="pack-card" data-tags="reggaeton hits 12 perreo" data-id="p_reg_12">
-            <button class="fav-btn" onclick="toggleFav('p_reg_12', this)">★</button>
-            <span class="dl-counter">DLs: <span id="count-p_reg_12">0</span></span>
-            <h3>Reggaeton Hits 12</h3>
-            <a class="dl-link" href="https://drive.google.com/drive/folders/1L5ZZYzQA73EuRWj7eKb5vCzHGque_S5E" onclick="trackDL('p_reg_12')" target="_blank">DESCARGAR</a>
+        <div class="pack-card" data-tags="rkt perreo tiktok 12" data-id="rkt_12">
+            <h3>RKT-Perreo Vol 12</h3>
+            <a class="dl-link" href="https://drive.google.com/drive/folders/19jqOVsL3AY8vJJc0hfjc1yvWXhdBDVna" onclick="trackDL('rkt_12')" target="_blank">DESCARGAR</a>
         </div>
-        <div class="pack-card" data-tags="rkt perreo tiktok 12" data-id="p_rkt_12">
-            <button class="fav-btn" onclick="toggleFav('p_rkt_12', this)">★</button>
-            <span class="dl-counter">DLs: <span id="count-p_rkt_12">0</span></span>
-            <h3>RKT-Perreo 12</h3>
-            <a class="dl-link" href="https://drive.google.com/drive/folders/19jqOVsL3AY8vJJc0hfjc1yvWXhdBDVna" onclick="trackDL('p_rkt_12')" target="_blank">DESCARGAR</a>
+        <div class="pack-card" data-tags="reggaeton hits 12 old school" data-id="reg_12">
+            <h3>Reggaeton Hits Vol 12</h3>
+            <a class="dl-link" href="https://drive.google.com/drive/folders/1L5ZZYzQA73EuRWj7eKb5vCzHGque_S5E" onclick="trackDL('reg_12')" target="_blank">DESCARGAR</a>
+        </div>
+        <div class="pack-card" data-tags="trap hits 11 urbano" data-id="trap_11">
+            <h3>Trap Hits Vol 11</h3>
+            <a class="dl-link" href="https://drive.google.com/drive/folders/12F-ocA64NXtb0SoNODPHJKKbAgGT99Gp" onclick="trackDL('trap_11')" target="_blank">DESCARGAR</a>
+        </div>
+        <div class="pack-card" data-tags="tech house 11 electronica" data-id="tech_11">
+            <h3>Tech House Vol 11</h3>
+            <a class="dl-link" href="https://drive.google.com/drive/folders/1N7NE8Me9JHiDVjUruObefcMzmp3vnzBU" onclick="trackDL('tech_11')" target="_blank">DESCARGAR</a>
+        </div>
+        <div class="pack-card" data-tags="pop music 13 radio" data-id="pop_13">
+            <h3>Pop Music Vol 13</h3>
+            <a class="dl-link" href="https://drive.google.com/drive/folders/1m5F0WXo4otF3dnexj4_xBdEDvq5-o_iu" onclick="trackDL('pop_13')" target="_blank">DESCARGAR</a>
         </div>
     </div>
 
     <h2 class="category-title">🕰️ Retro & Classics</h2>
     <div class="pack-grid">
-        <div class="pack-card" data-tags="90s noventa retro v2" data-id="p_retro_90_v2">
-            <button class="fav-btn" onclick="toggleFav('p_retro_90_v2', this)">★</button>
-            <span class="dl-counter">DLs: <span id="count-p_retro_90_v2">0</span></span>
-            <h3>Retro Hits 90s V2</h3>
-            <a class="dl-link" href="https://drive.google.com/drive/folders/1aZ2nQOvoVIBiR1aKwxoZVXrw0z1A_FAq" onclick="trackDL('p_retro_90_v2')" target="_blank">DESCARGAR</a>
+        <div class="pack-card" data-tags="retro 90s noventa eurodance v2" data-id="ret_90_2">
+            <h3>Retro Hits 90s Vol 2</h3>
+            <a class="dl-link" href="https://drive.google.com/drive/folders/1aZ2nQOvoVIBiR1aKwxoZVXrw0z1A_FAq" onclick="trackDL('ret_90_2')" target="_blank">DESCARGAR</a>
         </div>
-        <div class="pack-card" data-tags="funky disco dance groove" data-id="p_funky_disco">
-            <button class="fav-btn" onclick="toggleFav('p_funky_disco', this)">★</button>
-            <span class="dl-counter">DLs: <span id="count-p_funky_disco">0</span></span>
-            <h3>Funky Disco</h3>
-            <a class="dl-link" href="https://drive.google.com/drive/folders/1iIhflEPGFGTxTNcgFvSUESkjzRZHz5oK" onclick="trackDL('p_funky_disco')" target="_blank">DESCARGAR</a>
+        <div class="pack-card" data-tags="80s love lentos románticos v3" data-id="love_80_3">
+            <h3>80s Love Hits Vol 3</h3>
+            <a class="dl-link" href="https://drive.google.com/drive/folders/1mqunjgy_AZMQmWn34Wz8rdrcNQmqkYPZ" onclick="trackDL('love_80_3')" target="_blank">DESCARGAR</a>
+        </div>
+        <div class="pack-card" data-tags="funky disco groove 70s 80s" data-id="funk_dis">
+            <h3>Special Funky Disco</h3>
+            <a class="dl-link" href="https://drive.google.com/drive/folders/1iIhflEPGFGTxTNcgFvSUESkjzRZHz5oK" onclick="trackDL('funk_dis')" target="_blank">DESCARGAR</a>
+        </div>
+        <div class="pack-card" data-tags="classic project coleccion mp3 megamix" data-id="class_proj">
+            <h3>The Classic Project MP3</h3>
+            <a class="dl-link" href="https://drive.google.com/drive/folders/1fAmiGHlaVVkXBN6k3-QIIWHzOhCF2dqF" onclick="trackDL('class_proj')" target="_blank">DESCARGAR</a>
         </div>
     </div>
 
-    <h2 class="category-title">🛠️ Herramientas & Especiales</h2>
+    <h2 class="category-title">🛠️ Herramientas, FX & Software</h2>
     <div class="pack-grid">
-        <div class="pack-card" data-tags="fx efectos samples voces pack" data-id="p_fx_v4">
-            <button class="fav-btn" onclick="toggleFav('p_fx_v4', this)">★</button>
-            <span class="dl-counter">DLs: <span id="count-p_fx_v4">0</span></span>
-            <h3>Samples & FX V4</h3>
-            <a class="dl-link" href="https://drive.google.com/drive/folders/15qvvkFgLYiCSLbNrz9WU0vwKoZ0BqHvI" onclick="trackDL('p_fx_v4')" target="_blank">DESCARGAR</a>
+        <div class="pack-card" data-tags="software programa dj pc mixxx gratis virtual" data-id="soft_mixxx">
+            <h3>MIXXX DJ Software</h3>
+            <a class="dl-link" href="https://downloads.mixxx.org/releases/2.5.4/mixxx-2.5.4-win64.msi" onclick="trackDL('soft_mixxx')" target="_blank">DESCARGAR</a>
         </div>
-        <div class="pack-card" data-tags="software programa dj mixxx pc" data-id="p_mixxx_final">
-            <button class="fav-btn" onclick="toggleFav('p_mixxx_final', this)">★</button>
-            <span class="dl-counter">DLs: <span id="count-p_mixxx_final">0</span></span>
-            <h3>MIXXX DJ</h3>
-            <a class="dl-link" href="https://downloads.mixxx.org/releases/2.5.4/mixxx-2.5.4-win64.msi" onclick="trackDL('p_mixxx_final')" target="_blank">DESCARGAR</a>
+        <div class="pack-card" data-tags="fx efectos samples voces bocinas v4" data-id="fx_4">
+            <h3>Samples & FX Vol 4</h3>
+            <a class="dl-link" href="https://drive.google.com/drive/folders/15qvvkFgLYiCSLbNrz9WU0vwKoZ0BqHvI" onclick="trackDL('fx_4')" target="_blank">DESCARGAR</a>
+        </div>
+        <div class="pack-card" data-tags="visuales videos pantallas vdj 4" data-id="vis_4">
+            <h3>Pack Visuales 4</h3>
+            <a class="dl-link" href="https://drive.google.com/drive/folders/1N4DK7qwA2dhft356QpbeyuDaDJYoXLCe" onclick="trackDL('vis_4')" target="_blank">DESCARGAR</a>
+        </div>
+        <div class="pack-card" data-tags="bolivia portal djs folclore 8" data-id="bol_8">
+            <h3>Portal Bolivia Vol 8</h3>
+            <a class="dl-link" href="https://drive.google.com/drive/folders/1-FCeijeUXpT9Ndi_0JVOEYpOGPMKaeV7" onclick="trackDL('bol_8')" target="_blank">DESCARGAR</a>
+        </div>
+        <div class="pack-card" data-tags="fito paez discografia nacional" data-id="fito_640">
+            <h3>Fito Paez (640 Tracks)</h3>
+            <a class="dl-link" href="https://drive.google.com/drive/folders/1hyKCgKARLtjmZCl9DlaEbXQP7F9szbZn" onclick="trackDL('fito_640')" target="_blank">DESCARGAR</a>
         </div>
     </div>
 </div>
 
 <script>
+    // Configura tu Firebase aquí
     const firebaseConfig = __FIREBASE_CONFIG_PLACEHOLDER__;
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // Online Users
+    // Online y Descargas (Real-time)
     const onlineRef = db.ref('online_users');
     const myRef = onlineRef.push();
     myRef.set(true); myRef.onDisconnect().remove();
     onlineRef.on('value', snap => document.getElementById('live-users').innerText = snap.numChildren());
 
-    // Tracking
     function trackDL(id) {
         db.ref('packs/' + id).transaction(v => (v || 0) + 1);
         db.ref('global_downloads').transaction(v => (v || 0) + 1);
-        let history = JSON.parse(localStorage.getItem('djHistory')) || [];
-        if(!history.includes(id)) history.push(id);
-        localStorage.setItem('djHistory', JSON.stringify(history));
     }
 
     db.ref('packs').on('value', snap => {
         const data = snap.val();
         for(let id in data) {
             const el = document.getElementById('count-' + id);
-            if(el) el.innerText = (data[id] || 0).toLocaleString();
+            if(el) el.innerText = data[id].toLocaleString();
         }
     });
 
@@ -198,62 +177,24 @@
         document.getElementById('global-total').innerText = (snap.val() || 0).toLocaleString();
     });
 
-    // BUSCADOR INTELIGENTE (Incluye etiquetas escondidas)
+    // BUSCADOR INTELIGENTE POR TAGS
     document.getElementById('djSearch').addEventListener('keyup', function() {
         let q = this.value.toLowerCase();
         document.querySelectorAll('.pack-card').forEach(card => {
             let tags = card.getAttribute('data-tags') || "";
-            let content = card.innerText.toLowerCase();
-            card.style.display = (content.includes(q) || tags.includes(q)) ? "" : "none";
+            let text = card.innerText.toLowerCase();
+            card.style.display = (text.includes(q) || tags.includes(q)) ? "" : "none";
         });
     });
 
-    // Filtros
-    let favs = JSON.parse(localStorage.getItem('djFavs')) || [];
-    function toggleFav(id, btn) {
-        if(favs.includes(id)) favs = favs.filter(f => f !== id);
-        else favs.push(id);
-        localStorage.setItem('djFavs', JSON.stringify(favs));
-        btn.classList.toggle('active');
-    }
-
-    function filterBy(type, btn) {
-        document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        let history = JSON.parse(localStorage.getItem('djHistory')) || [];
-        document.querySelectorAll('.pack-card').forEach(card => {
-            let id = card.getAttribute('data-id');
-            if(type === 'all') card.style.display = "";
-            else if(type === 'favs') card.style.display = favs.includes(id) ? "" : "none";
-            else if(type === 'history') card.style.display = history.includes(id) ? "" : "none";
-        });
-    }
-
-    // BPM
-    let taps = [];
-    function tapBPM() {
-        const now = Date.now(); taps.push(now);
-        if(taps.length > 4) taps.shift();
-        if(taps.length > 1) {
-            const avg = (taps[taps.length-1] - taps[0]) / (taps.length - 1);
-            document.getElementById('bpm-display').innerText = Math.round(60000 / avg);
-        }
-    }
-
-    // Social Pop
+    // Notificación Social Aleatoria
     setInterval(() => {
-        const users = ["DJ Nico", "DJ Flow", "Christian", "Seba DJ", "Mati"];
-        const user = users[Math.floor(Math.random()*users.length)];
-        document.getElementById('pop-text').innerHTML = `🔥 <b>${user}</b> descargó un pack`;
+        const djs = ["DJ Mati", "Seba Remix", "Nico DJ", "Christian", "DJ Flow"];
+        document.getElementById('pop-text').innerHTML = `🔥 <b>${djs[Math.floor(Math.random()*djs.length)]}</b> bajó un pack`;
         const pop = document.getElementById('social-pop');
         pop.style.left = "20px";
         setTimeout(() => pop.style.left = "-400px", 4000);
-    }, 25000);
-
-    // Cargar estado inicial
-    document.querySelectorAll('.pack-card').forEach(card => {
-        if(favs.includes(card.getAttribute('data-id'))) card.querySelector('.fav-btn').classList.add('active');
-    });
+    }, 30000);
 </script>
 </body>
 </html>
