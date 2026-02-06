@@ -9,49 +9,32 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat:wght@700;900&display=swap');
         :root { --color1: #ff00ea; --color2: #00e5ff; --color3: #ffff00; --color4: #00ff00; --bg-black: #050505; }
-        
         body { background-color: var(--bg-black); color: white; font-family: 'Montserrat', sans-serif; margin: 0; overflow-x: hidden; }
-
-        /* Fondo de luces ambientales */
         .ambient-light { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.15; pointer-events: none; }
         .orb { position: absolute; width: 600px; height: 600px; border-radius: 50%; filter: blur(120px); animation: move 20s infinite alternate; }
         .orb1 { background: var(--color1); top: -10%; left: -10%; }
         .orb2 { background: var(--color2); bottom: -10%; right: -10%; }
         @keyframes move { 0% { transform: translate(0,0); } 100% { transform: translate(100px, 50px); } }
-
-        /* Widgets Flotantes */
         .sidebar-stats { position: fixed; right: 20px; top: 20px; background: rgba(0,0,0,0.9); border: 2px solid var(--color2); padding: 15px; border-radius: 12px; z-index: 1000; text-align: center; font-size: 0.8rem; box-shadow: 0 0 15px var(--color2); }
         .sidebar-stats b { color: var(--color4); font-size: 1.1rem; display: block; }
-
         #bpm-tool { position: fixed; left: 20px; bottom: 20px; background: #000; border: 2px solid var(--color4); padding: 10px; border-radius: 8px; text-align: center; z-index: 1000; width: 70px; }
         #bpm-display { font-size: 1.2rem; font-weight: 900; margin: 5px 0; }
-
         #social-pop { position: fixed; left: -400px; bottom: 30px; background: white; color: black; padding: 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 900; transition: 0.6s; z-index: 2000; border-left: 6px solid var(--color1); box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-
-        /* Contenido */
         .dj-container { max-width: 1100px; margin: auto; padding: 20px; }
-        h1 { font-family: 'Bangers', cursive; font-size: clamp(3rem, 8vw, 5rem); text-align: center; text-shadow: 5px 5px var(--color1); margin: 30px 0; transform: rotate(-1deg); }
-        
+        h1 { font-family: 'Bangers', cursive; font-size: clamp(3rem, 8vw, 5rem); text-align: center; text-shadow: 5px 5px var(--color1); margin: 30px 0; }
         #djSearch { width: 100%; padding: 20px; background: #000; border: 4px solid var(--color2); color: var(--color3); font-size: 1.3rem; font-weight: 900; box-shadow: 8px 8px var(--color1); outline: none; margin-bottom: 30px; box-sizing: border-box; }
-
         .toolbar { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 30px; }
         .tool-btn { background: #111; border: 2px solid white; color: white; padding: 10px 15px; cursor: pointer; font-weight: 900; text-transform: uppercase; }
         .tool-btn.active { background: white; color: black; }
-
-        /* Categorías y Packs */
         .category-label { background: var(--color3); color: black; padding: 5px 15px; font-weight: 900; display: inline-block; margin: 20px 0; transform: skewX(-10deg); text-transform: uppercase; }
         .pack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-bottom: 40px; }
         .pack-card { background: rgba(20,20,20,0.95); border: 2px solid white; padding: 20px; transition: 0.3s; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
         .pack-card:hover { transform: translateY(-5px); background: white; color: black; border-color: var(--color1); }
-        
         .dl-counter { font-size: 0.7rem; font-weight: 900; color: var(--color2); display: block; margin-bottom: 10px; }
-        .pack-card:hover .dl-counter { color: #555; }
-        
         .dl-link { display: block; background: black; color: white; text-align: center; padding: 12px; text-decoration: none; font-weight: 900; margin-top: 10px; }
         .pack-card:hover .dl-link { background: var(--color1); }
-
-        .fav-btn { position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 1.5rem; color: #333; cursor: pointer; transition: 0.2s; }
-        .fav-btn.active { color: var(--color1) !important; text-shadow: 0 0 5px var(--color1); }
+        .fav-btn { position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 1.5rem; color: #333; cursor: pointer; }
+        .fav-btn.active { color: var(--color1) !important; }
     </style>
 </head>
 <body>
@@ -73,28 +56,49 @@
 
 <div class="dj-container">
     <h1>PACK DJ 100K</h1>
-    
     <input type="text" id="djSearch" placeholder="BUSCAR GENERO, ARTISTA, TAGS...">
 
     <div class="toolbar">
         <button class="tool-btn active" onclick="filterBy('all', this)">Todos</button>
-        <button class="tool-btn" onclick="filterBy('favs', this)" style="color:var(--color1)">⭐ Favoritos</button>
-        <button class="tool-btn" onclick="filterBy('history', this)" style="color:var(--color2)">🕒 Historial</button>
+        <button class="tool-btn" onclick="filterBy('favs', this)">⭐ Favoritos</button>
+        <button class="tool-btn" onclick="filterBy('history', this)">🕒 Historial</button>
     </div>
 
     <div class="category-label">🔥 CACHENGUE / RKT</div>
     <div class="pack-grid">
         <div class="pack-card" data-tags="verano 2025 cumbia fiesta" data-id="p_verano_25">
             <button class="fav-btn" onclick="toggleFav('p_verano_25', this)">★</button>
-            <span class="dl-counter">REAL DLs: <span id="count-p_verano_25">0</span></span>
+            <span class="dl-counter">DESCARGAS: <span id="count-p_verano_25">0</span></span>
             <h3>Pack Verano 2025</h3>
-            <a class="dl-link" href="TU_LINK" onclick="trackDL('p_verano_25')" target="_blank">DESCARGAR</a>
+            <a class="dl-link" href="TU_LINK_DRIVE" onclick="trackDL('p_verano_25')" target="_blank">DESCARGAR</a>
         </div>
-        <div class="pack-card" data-tags="rkt perreo boliche" data-id="p_rkt_vol1">
+        <div class="pack-card" data-tags="rkt perreo tiktok boliche" data-id="p_rkt_vol1">
             <button class="fav-btn" onclick="toggleFav('p_rkt_vol1', this)">★</button>
-            <span class="dl-counter">REAL DLs: <span id="count-p_rkt_vol1">0</span></span>
+            <span class="dl-counter">DESCARGAS: <span id="count-p_rkt_vol1">0</span></span>
             <h3>RKT Perreo Vol.1</h3>
-            <a class="dl-link" href="TU_LINK" onclick="trackDL('p_rkt_vol1')" target="_blank">DESCARGAR</a>
+            <a class="dl-link" href="TU_LINK_DRIVE" onclick="trackDL('p_rkt_vol1')" target="_blank">DESCARGAR</a>
+        </div>
+        <div class="pack-card" data-tags="cachengue clasico fiesta" data-id="p_cachengue_mix">
+            <button class="fav-btn" onclick="toggleFav('p_cachengue_mix', this)">★</button>
+            <span class="dl-counter">DESCARGAS: <span id="count-p_cachengue_mix">0</span></span>
+            <h3>Cachengue Mix Set</h3>
+            <a class="dl-link" href="TU_LINK_DRIVE" onclick="trackDL('p_cachengue_mix')" target="_blank">DESCARGAR</a>
+        </div>
+    </div>
+
+    <div class="category-label">💾 RETRO / 80s 90s</div>
+    <div class="pack-grid">
+        <div class="pack-card" data-tags="retro 90s 80s clasicos" data-id="p_retro_90">
+            <button class="fav-btn" onclick="toggleFav('p_retro_90', this)">★</button>
+            <span class="dl-counter">DESCARGAS: <span id="count-p_retro_90">0</span></span>
+            <h3>Retro Hits 90s</h3>
+            <a class="dl-link" href="TU_LINK_DRIVE" onclick="trackDL('p_retro_90')" target="_blank">DESCARGAR</a>
+        </div>
+        <div class="pack-card" data-tags="vintage disco funk" data-id="p_disco_funk">
+            <button class="fav-btn" onclick="toggleFav('p_disco_funk', this)">★</button>
+            <span class="dl-counter">DESCARGAS: <span id="count-p_disco_funk">0</span></span>
+            <h3>Disco Funk Essentials</h3>
+            <a class="dl-link" href="TU_LINK_DRIVE" onclick="trackDL('p_disco_funk')" target="_blank">DESCARGAR</a>
         </div>
     </div>
 
@@ -102,37 +106,32 @@
     <div class="pack-grid">
         <div class="pack-card" data-tags="software dj mixxx programa pc" data-id="p_mixxx">
             <button class="fav-btn" onclick="toggleFav('p_mixxx', this)">★</button>
-            <span class="dl-counter">REAL DLs: <span id="count-p_mixxx">0</span></span>
+            <span class="dl-counter">DESCARGAS: <span id="count-p_mixxx">0</span></span>
             <h3>MIXXX DJ Pro</h3>
             <a class="dl-link" href="https://mixxx.org/download/" onclick="trackDL('p_mixxx')" target="_blank">DESCARGAR</a>
         </div>
         <div class="pack-card" data-tags="fx efectos bocinas samples" data-id="p_fx_horns">
             <button class="fav-btn" onclick="toggleFav('p_fx_horns', this)">★</button>
-            <span class="dl-counter">REAL DLs: <span id="count-p_fx_horns">0</span></span>
-            <h3>Mega FX (Voces/Bocinas)</h3>
-            <a class="dl-link" href="TU_LINK" onclick="trackDL('p_fx_horns')" target="_blank">DESCARGAR</a>
+            <span class="dl-counter">DESCARGAS: <span id="count-p_fx_horns">0</span></span>
+            <h3>Mega FX Horns</h3>
+            <a class="dl-link" href="TU_LINK_DRIVE" onclick="trackDL('p_fx_horns')" target="_blank">DESCARGAR</a>
         </div>
     </div>
 </div>
 
 <script>
-    // INYECTADO DESDE GITHUB SECRETS
     const firebaseConfig = __FIREBASE_CONFIG_PLACEHOLDER__;
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // 1. Online Real
     const onlineRef = db.ref('online_users');
     const myRef = onlineRef.push();
     myRef.set(true); myRef.onDisconnect().remove();
     onlineRef.on('value', snap => document.getElementById('live-users').innerText = snap.numChildren());
 
-    // 2. Descargas Reales
     function trackDL(id) {
         db.ref('packs/' + id).transaction(v => (v || 0) + 1);
         db.ref('global_downloads').transaction(v => (v || 0) + 1);
-        
         let history = JSON.parse(localStorage.getItem('djHistory')) || [];
         if(!history.includes(id)) history.push(id);
         localStorage.setItem('djHistory', JSON.stringify(history));
@@ -150,7 +149,14 @@
         document.getElementById('global-total').innerText = (snap.val() || 0).toLocaleString();
     });
 
-    // 3. Favoritos y Filtros
+    document.getElementById('djSearch').addEventListener('keyup', function() {
+        let q = this.value.toLowerCase();
+        document.querySelectorAll('.pack-card').forEach(card => {
+            let txt = (card.getAttribute('data-tags') || "") + card.innerText.toLowerCase();
+            card.style.display = txt.includes(q) ? "" : "none";
+        });
+    });
+
     let favs = JSON.parse(localStorage.getItem('djFavs')) || [];
     function toggleFav(id, btn) {
         if(favs.includes(id)) favs = favs.filter(f => f !== id);
@@ -171,16 +177,6 @@
         });
     }
 
-    // 4. Buscador Pro
-    document.getElementById('djSearch').addEventListener('keyup', function() {
-        let q = this.value.toLowerCase();
-        document.querySelectorAll('.pack-card').forEach(card => {
-            let txt = (card.getAttribute('data-tags') || "") + card.innerText.toLowerCase();
-            card.style.display = txt.includes(q) ? "" : "none";
-        });
-    });
-
-    // 5. BPM Tap
     let taps = [];
     function tapBPM() {
         const now = Date.now(); taps.push(now);
@@ -191,18 +187,16 @@
         }
     }
 
-    // 6. Notificaciones Sociales
     function socialPop() {
-        const users = ["DJ Nico", "DJ Flow", "Christian", "Seba DJ", "DJ Luquitas", "Mati"];
+        const users = ["DJ Nico", "DJ Flow", "Christian", "Seba DJ", "Mati"];
         const user = users[Math.floor(Math.random()*users.length)];
-        document.getElementById('pop-text').innerHTML = `🔥 <b>${user}</b> bajó un pack`;
+        document.getElementById('pop-text').innerHTML = `🔥 <b>${user}</b> descargó un pack`;
         const pop = document.getElementById('social-pop');
         pop.style.left = "20px";
         setTimeout(() => pop.style.left = "-400px", 4000);
     }
     setInterval(socialPop, 25000);
 
-    // Cargar favs visualmente al inicio
     document.querySelectorAll('.pack-card').forEach(card => {
         if(favs.includes(card.getAttribute('data-id'))) card.querySelector('.fav-btn').classList.add('active');
     });
